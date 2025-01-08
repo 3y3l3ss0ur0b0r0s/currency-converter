@@ -18,6 +18,8 @@ form > div {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    max-width: 600px;
+    margin: auto;
 }
 
 form label::after {
@@ -48,4 +50,8 @@ button {
 .error {
     color: red;
     font-size: medium;
+}
+
+#resultAmount {
+    background-color: azure;
 }
