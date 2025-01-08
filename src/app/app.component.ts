@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NgFor } from '@angular/common';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CurrencyService } from './currency.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ReactiveFormsModule, NgFor],
+  imports: [ReactiveFormsModule, CurrencyPipe, NgFor, NgIf],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -15,10 +15,10 @@ export class AppComponent implements OnInit {
   title = 'Currency Converter';
   currencyForm!: FormGroup;
   currencies: any[] = [];
-  originalCurrency = 'Loading . . .';
+  originalCurrency!: string;
   originalAmount!: string;
-  resultCurrency = 'Loading . . .';
-  resultAmount!: string;
+  resultCurrency!: string;
+  resultAmount!: number;
 
   constructor(private cs: CurrencyService) { }
 
@@ -43,11 +43,6 @@ export class AppComponent implements OnInit {
         'resultAmount': new FormControl(null)
       })
     });
-    
-    // Subscribe to changes
-    this.currencyForm.statusChanges.subscribe(
-      (value) => console.log(value)
-    );
   }
 
   onSubmit() {
@@ -56,7 +51,26 @@ export class AppComponent implements OnInit {
     // TODO: Convert
     this.cs.convert(this.originalCurrency, this.resultCurrency, parseFloat(this.originalAmount)).subscribe((response: any) => {
       console.log(response);
-      this.resultAmount = parseFloat(response.value).toFixed(2);
+      // Decimal precision handled in pipe
+      this.resultAmount = parseFloat(response.value);
     });
+  }
+
+  checkIfEnterPressed(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      this.onSubmit();
+    }
+  }
+
+  noOriginalCurrency() {
+    return (this.currencyForm.get('original.originalCurrency') as FormGroup).errors?.['required'];
+  }
+
+  noOriginalAmount() {
+    return (this.currencyForm.get('original.originalAmount') as FormGroup).errors?.['required'];
+  }
+
+  noResultCurrency() {
+    return (this.currencyForm.get('result.resultCurrency') as FormGroup).errors?.['required'];
   }
 }

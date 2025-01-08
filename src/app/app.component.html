@@ -1,21 +1,30 @@
-<div class="form-container">
+<div class="converter-container">
   <h1>{{title}}</h1>
-  <form [formGroup]="currencyForm" (ngSubmit)="onSubmit()">
-    <div formGroupName="original">
-      <label for="originalCurrency">Original Currency</label>
-      <select [(ngModel)]="originalCurrency" id="originalCurrency" name="originalCurrency" formControlName="originalCurrency">
-        <option *ngFor="let currency of currencies" [value]="currency['short_code']">{{currency['short_code']}} - {{currency['name']}}</option>
-      </select>
-      <label for="originalAmount">Original Amount</label>
-      <input [(ngModel)]="originalAmount" type="number" id="originalAmount" step="0.01" formControlName="originalAmount">
-    </div>
-    <div formGroupName="result">
-      <label for="resultCurrency">Result Currency</label>
-      <select [(ngModel)]="resultCurrency" id="resultCurrency" name="resultCurrency" formControlName="resultCurrency">
-        <option *ngFor="let currency of currencies" [value]="currency['short_code']">{{currency['short_code']}} - {{currency['name']}}</option>
-      </select>
-      <label for="resultAmount">Result Amount</label>
-      <input [(ngModel)]="resultAmount" type="number" id="resultAmount" step="0.01" formControlName="resultAmount" readonly>
+  <form [formGroup]="currencyForm" (ngSubmit)="onSubmit()" (keyup)="checkIfEnterPressed($event)">
+    <div class="inputs">
+      <div formGroupName="original">
+        <label for="originalCurrency">Original Currency</label>
+        <select [(ngModel)]="originalCurrency" id="originalCurrency" name="originalCurrency"
+          formControlName="originalCurrency" required>
+          <option *ngFor="let currency of currencies" [value]="currency['short_code']">{{currency['short_code']}} -
+            {{currency['name']}}</option>
+        </select>
+        <span *ngIf="noOriginalCurrency()" class="error">Original currency is required!</span>
+        <label for="originalAmount">Original Amount</label>
+        <input [(ngModel)]="originalAmount" type="number" id="originalAmount" step="0.01" placeholder="Enter Original Amount"
+          formControlName="originalAmount" required>
+        <span *ngIf="noOriginalAmount()" class="error">Original amount is required!</span>
+      </div>
+      <div formGroupName="result">
+        <label for="resultCurrency">Result Currency</label>
+        <select [(ngModel)]="resultCurrency" id="resultCurrency" name="resultCurrency" formControlName="resultCurrency" required>
+          <option *ngFor="let currency of currencies" [value]="currency['short_code']">{{currency['short_code']}} -
+            {{currency['name']}}</option>
+        </select>
+        <span *ngIf="noResultCurrency()" class="error">Result currency is required!</span>
+        <label for="resultAmount">Result Amount</label>
+        <span id="resultAmount">{{ resultAmount | currency : resultCurrency : 'symbol' : '1.2-2'}}</span>
+      </div>
     </div>
     <button type="submit">Convert</button>
   </form>

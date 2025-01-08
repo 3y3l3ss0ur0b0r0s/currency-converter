@@ -1,0 +1,51 @@
+.converter-container {
+    text-align: center;
+}
+
+h1 {
+    font-size: xxx-large;
+    background-color: black;
+    color: white;
+    margin: 0px;
+}
+
+form {
+    text-align: center;
+    font-size: larger;
+}
+
+form > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+form label::after {
+    content: ':';
+    margin-right: 4px;
+}
+
+div[formGroupName] {
+    display: flex;
+    flex-direction: column;
+}
+
+div[formGroupName] label {
+    margin-top: 10px;
+}
+
+div[formGroupName] input {
+    height: fit-content;
+    text-align: center;
+}
+
+button {
+    margin: 30px;
+    width: fit-content;
+    font-size: x-large;
+}
+
+.error {
+    color: red;
+    font-size: medium;
+}
